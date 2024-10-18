@@ -1,5 +1,6 @@
-package com.example.currencyconverterapp.cryptomanager
+package com.example.currencyconverterapp.domain
 
+import com.example.currencyconverterapp.data.EncryptedData
 import javax.crypto.Cipher
 
 interface CryptoManagerUseCase {

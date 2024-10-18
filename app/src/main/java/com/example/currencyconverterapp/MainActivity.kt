@@ -18,7 +18,9 @@ import com.example.currencyconverterapp.ui.screens.signin.SignInScreen
 import com.example.currencyconverterapp.ui.screens.signup.SignUpScreen
 import com.example.currencyconverterapp.ui.screens.welcome.WelcomeScreen
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

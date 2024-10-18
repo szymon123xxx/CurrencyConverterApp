@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">CurrencyConverterApp</string>
+    <string name="provide_email">Enter your email</string>
+    <string name="provide_name">Enter your name</string>
+    <string name="provide_valid_email">Enter valid email</string>
+    <string name="provide_username">Enter your username</string>
+    <string name="provide_password">Enter your password</string>
+    <string name="password_limit_characters">Password should contains at least eight characters</string>
+    <string name="password_limit_digit">Password should contains at least one digit</string>
+    <string name="password_limit_uppercase">Password should contains at least one uppercase</string>
+    <string name="password_limit_lowercase">Password should contains at least one lowercase</string>
+    <string name="password_limit_special_character">Password should contains at least one special character</string>
+    <string name="password_differ">Passwords differ</string>
+    <string name="password_personal_information">Enter your personal information</string>
+    <string name="register">Register</string>
+    <string name="email_field">Email</string>
+    <string name="username_field">Username</string>
+    <string name="password_field">Password</string>
+    <string name="confirm_password_field">Confirm password</string>
+    <string name="provide_confirm_password">Enter confirm password</string>
+    <string name="button_login">Login</string>
+    <string name="invalid_login_inputs">The entered password or email is invalid</string>
 </resources>

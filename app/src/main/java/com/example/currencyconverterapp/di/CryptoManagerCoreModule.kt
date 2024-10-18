@@ -1,8 +1,8 @@
 package com.example.currencyconverterapp.di
 
 import android.content.Context
-import com.example.currencyconverterapp.cryptomanager.CryptoManagerUseCase
-import com.example.currencyconverterapp.cryptomanager.CryptoManagerUseCaseImpl
+import com.example.currencyconverterapp.data.CryptoManagerUseCaseImpl
+import com.example.currencyconverterapp.domain.CryptoManagerUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

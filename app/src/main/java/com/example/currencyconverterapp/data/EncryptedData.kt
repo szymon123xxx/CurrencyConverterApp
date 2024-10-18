@@ -1,4 +1,4 @@
-package com.example.currencyconverterapp.cryptomanager
+package com.example.currencyconverterapp.data
 
 data class EncryptedData(val ciphertext: ByteArray, val initializationVector: ByteArray) {
     override fun equals(other: Any?): Boolean {

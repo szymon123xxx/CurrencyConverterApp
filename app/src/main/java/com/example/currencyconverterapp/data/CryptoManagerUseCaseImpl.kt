@@ -1,8 +1,9 @@
-package com.example.currencyconverterapp.cryptomanager
+package com.example.currencyconverterapp.data
 
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import com.example.currencyconverterapp.domain.CryptoManagerUseCase
 import com.google.gson.Gson
 import java.nio.charset.Charset
 import java.security.KeyStore
