@@ -6,25 +6,21 @@ import androidx.lifecycle.viewModelScope
 import at.florianschuster.control.EffectController
 import at.florianschuster.control.createEffectController
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.domain.BiometricPreferencesUseCase
-import com.example.currencyconverterapp.domain.DispatcherProvider
-import com.example.currencyconverterapp.utils.isValidEmail
-import com.example.currencyconverterapp.utils.isValidPassword
+import com.example.currencyconverterapp.domain.usecases.DataStorePreferencesUseCase
+import com.example.currencyconverterapp.ui.utils.isValidEmail
+import com.example.currencyconverterapp.ui.utils.isValidPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    dispatcherProvider: DispatcherProvider,
-    preferences: BiometricPreferencesUseCase,
+    preferences: DataStorePreferencesUseCase,
 ) : ViewModel() {
     val controller = viewModelScope.createSignUpController(
         initialSignUpState = SignUpState(),
-        dispatcherProvider = dispatcherProvider,
         preferences = preferences,
     )
 }
@@ -61,7 +57,7 @@ sealed interface SignUpAction {
     data object Register : SignUpAction
 }
 
-sealed interface SignUpMutation {
+private sealed interface SignUpMutation {
     data class UpdateEmail(val email: String) : SignUpMutation
     data class UpdatePassword(val password: String) : SignUpMutation
     data class UpdateReEnteredPassword(val reEnteredPassword: String) : SignUpMutation
@@ -71,7 +67,7 @@ sealed interface SignUpMutation {
     data class SetReEnteredPasswordValidationError(@StringRes val message: Int) : SignUpMutation
     data class SetUsernameValidationError(@StringRes val message: Int) : SignUpMutation
     data class SetValidationError(@StringRes val message: Int) : SignUpMutation
-    data object SetLoading : SignUpMutation
+    data object RefreshFields : SignUpMutation
 }
 
 sealed interface SignUpEffect {
@@ -83,8 +79,7 @@ sealed interface SignUpEffect {
  */
 private fun CoroutineScope.createSignUpController(
     initialSignUpState: SignUpState,
-    dispatcherProvider: DispatcherProvider,
-    preferences: BiometricPreferencesUseCase,
+    preferences: DataStorePreferencesUseCase,
 ): EffectController<SignUpAction, SignUpState, SignUpEffect> = createEffectController(
     initialState = initialSignUpState,
     mutator = { action ->
@@ -101,48 +96,47 @@ private fun CoroutineScope.createSignUpController(
 
             is SignUpAction.UpdateUsername -> flowOf(SignUpMutation.UpdateUsername(action.username))
 
-            is SignUpAction.Register -> when {
-                currentState.email.value.isBlank()
-                        || currentState.password.value.isBlank()
-                        || currentState.reEnteredPassword.value.isBlank()
-                        || currentState.reEnteredPassword.value != currentState.password.value
-                        || currentState.username.value.isBlank()
-                        || !currentState.email.value.isValidEmail()
-                        || currentState.password.value.isValidPassword() != -1 -> flow {
+            is SignUpAction.Register -> with(currentState) {
+                when {
+                    currentState.email.value.isBlank()
+                            || currentState.password.value.isBlank()
+                            || currentState.reEnteredPassword.value.isBlank()
+                            || currentState.reEnteredPassword.value != currentState.password.value
+                            || currentState.username.value.isBlank()
+                            || !currentState.email.value.isValidEmail()
+                            || currentState.password.value.isValidPassword() != -1 -> flow {
 
-                    if (currentState.email.value.isBlank()) {
-                        emit(SignUpMutation.SetEmailValidationError(R.string.provide_email))
-                    } else if (!currentState.email.value.isValidEmail()) {
-                        emit(SignUpMutation.SetEmailValidationError(R.string.provide_valid_email))
+                        if (email.value.isBlank()) {
+                            emit(SignUpMutation.SetEmailValidationError(R.string.provide_email))
+                        } else if (!email.value.isValidEmail()) {
+                            emit(SignUpMutation.SetEmailValidationError(R.string.provide_valid_email))
+                        }
+
+                        if (username.value.isBlank()) {
+                            emit(SignUpMutation.SetUsernameValidationError(R.string.provide_username))
+                        }
+
+                        if (password.value.isBlank()) {
+                            emit(SignUpMutation.SetPasswordValidationError(R.string.provide_password))
+                        } else if (password.value.isValidPassword() != -1) {
+                            emit(SignUpMutation.SetPasswordValidationError(password.value.isValidPassword()))
+                        }
+
+                        if (password.value.isNotEmpty() && reEnteredPassword.value != currentState.password.value) {
+
+                            emit(SignUpMutation.SetReEnteredPasswordValidationError(R.string.password_differ))
+                        } else if (reEnteredPassword.value.isBlank()) {
+                            emit(SignUpMutation.SetReEnteredPasswordValidationError(R.string.provide_password))
+                        }
+
                     }
 
-                    if (currentState.username.value.isBlank()) {
-                        emit(SignUpMutation.SetUsernameValidationError(R.string.provide_username))
-                    }
-
-                    if (currentState.password.value.isBlank()) {
-                        emit(SignUpMutation.SetPasswordValidationError(R.string.provide_password))
-                    } else if (currentState.password.value.isValidPassword() != -1) {
-                        emit(SignUpMutation.SetPasswordValidationError(currentState.password.value.isValidPassword()))
-                    }
-
-                    if (currentState.password.value.isNotEmpty() && currentState.reEnteredPassword.value != currentState.password.value) {
-
-                        emit(SignUpMutation.SetReEnteredPasswordValidationError(R.string.password_differ))
-                    } else if (currentState.reEnteredPassword.value.isBlank()) {
-                        emit(SignUpMutation.SetReEnteredPasswordValidationError(R.string.provide_password))
-                    }
-
-                }
-
-                else -> flow {
-                    emit(SignUpMutation.SetLoading)
-
-                    withContext(dispatcherProvider.IO) {
-                        preferences.setEmail(currentState.email.value)
-                        preferences.setPassword(currentState.password.value)
-                        preferences.setUsername(currentState.username.value)
-
+                    else -> flow {
+                        with(preferences) {
+                            setEmail(email.value)
+                            setPassword(password.value)
+                            setUsername(username.value)
+                        }
                         emitEffect(SignUpEffect.Success)
                     }
                 }
@@ -151,89 +145,70 @@ private fun CoroutineScope.createSignUpController(
     },
     reducer = { mutation: SignUpMutation, previousState ->
         when (mutation) {
-            is SignUpMutation.UpdateEmail -> {
-                previousState.copy(
-                    email = previousState.email.copy(
-                        value = mutation.email,
-                        error = FieldStateError.None
-                    )
+            is SignUpMutation.UpdateEmail -> previousState.copy(
+                email = previousState.email.copy(
+                    value = mutation.email,
+                    error = FieldStateError.None
                 )
-            }
+            )
 
-            is SignUpMutation.UpdatePassword -> {
-                previousState.copy(
-                    password = previousState.password.copy(
-                        value = mutation.password,
-                        error = FieldStateError.None
-                    )
-                )
-            }
 
-            is SignUpMutation.UpdateReEnteredPassword -> {
-                previousState.copy(
-                    reEnteredPassword = previousState.reEnteredPassword.copy(
-                        value = mutation.reEnteredPassword,
-                        error = FieldStateError.None
-                    )
+            is SignUpMutation.UpdatePassword -> previousState.copy(
+                password = previousState.password.copy(
+                    value = mutation.password,
+                    error = FieldStateError.None
                 )
-            }
+            )
 
-            is SignUpMutation.UpdateUsername -> {
-                previousState.copy(
-                    username = previousState.username.copy(
-                        value = mutation.username,
-                        error = FieldStateError.None
-                    )
+            is SignUpMutation.UpdateReEnteredPassword -> previousState.copy(
+                reEnteredPassword = previousState.reEnteredPassword.copy(
+                    value = mutation.reEnteredPassword,
+                    error = FieldStateError.None
                 )
-            }
+            )
 
-            is SignUpMutation.SetEmailValidationError -> {
-                previousState.copy(
-                    email = previousState.email.copy(
-                        error = FieldStateError.Error(mutation.message)
-                    )
+            is SignUpMutation.UpdateUsername -> previousState.copy(
+                username = previousState.username.copy(
+                    value = mutation.username,
+                    error = FieldStateError.None
                 )
-            }
+            )
 
-            is SignUpMutation.SetPasswordValidationError -> {
-                previousState.copy(
-                    password = previousState.password.copy(
-                        error = FieldStateError.Error(mutation.message)
-                    )
+            is SignUpMutation.SetEmailValidationError -> previousState.copy(
+                email = previousState.email.copy(
+                    error = FieldStateError.Error(mutation.message)
                 )
-            }
+            )
 
-            is SignUpMutation.SetUsernameValidationError -> {
-                previousState.copy(
-                    username = previousState.username.copy(
-                        error = FieldStateError.Error(mutation.message)
-                    )
+            is SignUpMutation.SetPasswordValidationError -> previousState.copy(
+                password = previousState.password.copy(
+                    error = FieldStateError.Error(mutation.message)
                 )
-            }
+            )
 
-            is SignUpMutation.SetReEnteredPasswordValidationError -> {
-                previousState.copy(
-                    reEnteredPassword = previousState.reEnteredPassword.copy(
-                        error = FieldStateError.Error(mutation.message)
-                    )
+            is SignUpMutation.SetUsernameValidationError -> previousState.copy(
+                username = previousState.username.copy(
+                    error = FieldStateError.Error(mutation.message)
                 )
-            }
+            )
 
-            is SignUpMutation.SetValidationError -> {
-                previousState.copy(
-                    authState = SignUpAuthState.Error(mutation.message)
+            is SignUpMutation.SetReEnteredPasswordValidationError -> previousState.copy(
+                reEnteredPassword = previousState.reEnteredPassword.copy(
+                    error = FieldStateError.Error(mutation.message)
                 )
-            }
+            )
 
-            is SignUpMutation.SetLoading -> {
-                previousState.copy(
-                    authState = SignUpAuthState.Waiting,
-                    email = previousState.email.copy(error = FieldStateError.None),
-                    password = previousState.password.copy(error = FieldStateError.None),
-                    username = previousState.username.copy(error = FieldStateError.None),
-                    reEnteredPassword = previousState.reEnteredPassword.copy(error = FieldStateError.None),
-                )
-            }
+            is SignUpMutation.SetValidationError -> previousState.copy(
+                authState = SignUpAuthState.Error(mutation.message)
+            )
+
+            is SignUpMutation.RefreshFields -> previousState.copy(
+                authState = SignUpAuthState.Waiting,
+                email = previousState.email.copy(error = FieldStateError.None),
+                password = previousState.password.copy(error = FieldStateError.None),
+                username = previousState.username.copy(error = FieldStateError.None),
+                reEnteredPassword = previousState.reEnteredPassword.copy(error = FieldStateError.None),
+            )
         }
     }
 )

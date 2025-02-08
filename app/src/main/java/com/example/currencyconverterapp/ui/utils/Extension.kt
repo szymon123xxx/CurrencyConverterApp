@@ -1,4 +1,4 @@
-package com.example.currencyconverterapp.utils
+package com.example.currencyconverterapp.ui.utils
 
 import android.text.TextUtils
 import android.util.Patterns

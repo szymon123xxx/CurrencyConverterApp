@@ -21,6 +21,9 @@ import com.example.currencyconverterapp.ui.NavRoutes
 
 @Composable
 fun WelcomeScreen(navController: NavController) {
+
+    //Animation here. lottie animation
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,7 +37,7 @@ fun WelcomeScreen(navController: NavController) {
                 .height(50.dp),
             onClick = { navController.navigate(NavRoutes.SignIn.route) },
         ) {
-            Text(text = "Sign In", fontSize = 20.sp)
+            Text(text = "Sign In", fontSize = 20.sp) //extract strings
         }
         Spacer(modifier = Modifier.size(10.dp))
         Button(

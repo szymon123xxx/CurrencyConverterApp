@@ -22,11 +22,17 @@ android {
 
     buildTypes {
         release {
+            buildConfigField("String", "API_URL", "\"https://api.exchangerate.host\"")
+            buildConfigField("String", "API_KEY", "\"2bf9601ee897793dd4815ef2f4c92134\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            buildConfigField("String", "API_URL", "\"https://api.exchangerate.host\"")
+            buildConfigField("String", "API_KEY", "\"2bf9601ee897793dd4815ef2f4c92134\"")
         }
     }
     compileOptions {
@@ -38,6 +44,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -68,15 +75,19 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.compose.lifecycle)
+    implementation(libs.squareup.retrofit)
+    implementation(libs.squareup.gson.converter)
     ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
+
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

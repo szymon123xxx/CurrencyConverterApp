@@ -1,10 +1,8 @@
-package com.example.currencyconverterapp.domain
+package com.example.currencyconverterapp.domain.usecases
 
 import androidx.datastore.preferences.core.Preferences
 
-interface BiometricPreferencesUseCase {
-    suspend fun setToken(token: String): Preferences
-
+interface DataStorePreferencesUseCase {
     suspend fun getEmail(): String?
 
     suspend fun setEmail(userName: String): Preferences
@@ -16,8 +14,4 @@ interface BiometricPreferencesUseCase {
     suspend fun getUsername(): String?
 
     suspend fun setUsername(password: String): Preferences
-
-    suspend fun isBiometricEnabled(): Boolean
-
-    suspend fun setBiometricEnabled(isEnabled: Boolean): Preferences
 }

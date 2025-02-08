@@ -34,6 +34,8 @@ import androidx.navigation.NavController
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.ui.NavRoutes
 import com.example.currencyconverterapp.ui.components.CPOutlinedTextField
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun SignInScreen(
@@ -44,7 +46,10 @@ fun SignInScreen(
     val uiState by viewModel.controller.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel.controller) {
-        if (viewModel.controller.effects == SignInEffect.Success) navController.navigate(NavRoutes.Welcome) //for now to welcome, until main fragment not created
+        viewModel.controller.effects.onEach {
+            if (it == SignInEffect.Success)
+                navController.navigate(NavRoutes.Home.route)
+        }.launchIn(this)
     }
 
     SignInScreenContent(
@@ -88,7 +93,7 @@ private fun SignInScreenContent(
                 value = uiState.email.value,
                 onValueChange = { onAction(SignInAction.UpdateEmailInput(it)) },
                 isError = uiState.email.error is FieldStateError.Error,
-                errorText = when(uiState.email.error) {
+                errorText = when (uiState.email.error) {
                     is FieldStateError.None -> null
                     is FieldStateError.Error -> stringResource(uiState.email.error.message)
                 },
@@ -100,12 +105,13 @@ private fun SignInScreenContent(
                 value = uiState.password.value,
                 onValueChange = { onAction(SignInAction.UpdatePasswordInput(it)) },
                 isError = uiState.password.error is FieldStateError.Error,
-                errorText = when(uiState.password.error) {
+                errorText = when (uiState.password.error) {
                     is FieldStateError.None -> null
                     is FieldStateError.Error -> stringResource(uiState.password.error.message)
                 },
                 title = stringResource(R.string.password_field),
-                placeholder = stringResource(R.string.provide_password)
+                placeholder = stringResource(R.string.provide_password),
+                isPasswordType = true,
             )
             Spacer(modifier = Modifier.size(8.dp))
 

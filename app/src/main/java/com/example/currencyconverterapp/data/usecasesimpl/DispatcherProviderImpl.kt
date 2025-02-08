@@ -1,6 +1,6 @@
-package com.example.currencyconverterapp.data
+package com.example.currencyconverterapp.data.usecasesimpl
 
-import com.example.currencyconverterapp.domain.DispatcherProvider
+import com.example.currencyconverterapp.domain.usecases.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

@@ -42,7 +42,7 @@ fun App() = Surface(
 
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.Welcome.route,
+        startDestination = NavRoutes.Home.route,
     ) {
         composable(NavRoutes.Welcome.route) { WelcomeScreen(navController = navController) }
         composable(NavRoutes.SignIn.route) {

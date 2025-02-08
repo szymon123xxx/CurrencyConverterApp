@@ -46,7 +46,6 @@ fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel(),
     navigateBack: () -> Unit
 ) {
-
     val uiState by viewModel.controller.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel.controller) {
@@ -74,113 +73,111 @@ private fun SignUpScreenContent(
     uiState: SignUpState,
     onAction: (SignUpAction) -> Unit,
     navigateBack: () -> Unit,
-) {
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = navigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                },
-            )
-        },
-    ) { innerPadding ->
-        Column(
+) = Scaffold(
+    topBar = {
+        CenterAlignedTopAppBar(
+            title = {},
+            navigationIcon = {
+                IconButton(onClick = navigateBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+            },
+        )
+    },
+) { innerPadding ->
+    Column(
+        modifier = Modifier
+            .padding(innerPadding)
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Text(
             modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start,
+                .wrapContentSize()
+                .padding(horizontal = 16.dp),
+            text = stringResource(R.string.register),
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
+            fontSize = 28.sp
+        )
+        Spacer(Modifier.size(4.dp))
+
+        Text(
+            modifier = Modifier
+                .wrapContentSize()
+                .padding(horizontal = 16.dp),
+            text = stringResource(R.string.password_personal_information),
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.outlineVariant,
+            fontSize = 16.sp
+        )
+        Spacer(Modifier.size(20.dp))
+
+        CPOutlinedTextField(
+            value = uiState.username.value,
+            onValueChange = { onAction(SignUpAction.UpdateUsername(it)) },
+            isError = uiState.username.error is FieldStateError.Error,
+            errorText = when (uiState.username.error) {
+                is FieldStateError.None -> null
+                is FieldStateError.Error -> stringResource(uiState.username.error.message)
+            },
+            title = stringResource(R.string.username_field),
+            placeholder = stringResource(R.string.provide_name)
+        )
+        Spacer(modifier = Modifier.size(4.dp))
+
+        CPOutlinedTextField(
+            value = uiState.email.value,
+            onValueChange = { onAction(SignUpAction.UpdateEmailInput(it)) },
+            isError = uiState.email.error is FieldStateError.Error,
+            errorText = when (uiState.email.error) {
+                is FieldStateError.None -> null
+                is FieldStateError.Error -> stringResource(uiState.email.error.message)
+            },
+            title = stringResource(R.string.email_field),
+            placeholder = stringResource(R.string.provide_email)
+        )
+        Spacer(modifier = Modifier.size(4.dp))
+
+        CPOutlinedTextField(
+            value = uiState.password.value,
+            onValueChange = { onAction(SignUpAction.UpdatePasswordInput(it)) },
+            isError = uiState.password.error is FieldStateError.Error,
+            errorText = when (uiState.password.error) {
+                is FieldStateError.None -> null
+                is FieldStateError.Error -> stringResource(uiState.password.error.message)
+            },
+            title = stringResource(R.string.password_field),
+            placeholder = stringResource(R.string.provide_password)
+        )
+        Spacer(modifier = Modifier.size(4.dp))
+
+        CPOutlinedTextField(
+            value = uiState.reEnteredPassword.value,
+            onValueChange = { onAction(SignUpAction.UpdateReEnteredPasswordInput(it)) },
+            isError = uiState.reEnteredPassword.error is FieldStateError.Error,
+            errorText = when (uiState.reEnteredPassword.error) {
+                is FieldStateError.None -> null
+                is FieldStateError.Error -> stringResource(uiState.reEnteredPassword.error.message)
+            },
+            title = stringResource(R.string.confirm_password_field),
+            placeholder = stringResource(R.string.provide_confirm_password)
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(55.dp)
+                .padding(horizontal = 16.dp),
+            onClick = { onAction(SignUpAction.Register) }
         ) {
-            Text(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .padding(horizontal = 16.dp),
-                text = stringResource(R.string.register),
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 28.sp
-            )
-            Spacer(Modifier.size(4.dp))
-
-            Text(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .padding(horizontal = 16.dp),
-                text = stringResource(R.string.password_personal_information),
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.outlineVariant,
-                fontSize = 16.sp
-            )
-            Spacer(Modifier.size(20.dp))
-
-            CPOutlinedTextField(
-                value = uiState.username.value,
-                onValueChange = { onAction(SignUpAction.UpdateUsername(it)) },
-                isError = uiState.username.error is FieldStateError.Error,
-                errorText = when(uiState.username.error) {
-                    is FieldStateError.None -> null
-                    is FieldStateError.Error -> stringResource(uiState.username.error.message)
-                },
-                title = stringResource(R.string.username_field),
-                placeholder = stringResource(R.string.provide_name)
-            )
-            Spacer(modifier = Modifier.size(4.dp))
-
-            CPOutlinedTextField(
-                value = uiState.email.value,
-                onValueChange = { onAction(SignUpAction.UpdateEmailInput(it)) },
-                isError = uiState.email.error is FieldStateError.Error,
-                errorText = when(uiState.email.error) {
-                    is FieldStateError.None -> null
-                    is FieldStateError.Error -> stringResource(uiState.email.error.message)
-                },
-                title = stringResource(R.string.email_field),
-                placeholder = stringResource(R.string.provide_email)
-            )
-            Spacer(modifier = Modifier.size(4.dp))
-
-            CPOutlinedTextField(
-                value = uiState.password.value,
-                onValueChange = { onAction(SignUpAction.UpdatePasswordInput(it)) },
-                isError = uiState.password.error is FieldStateError.Error,
-                errorText = when(uiState.password.error) {
-                    is FieldStateError.None -> null
-                    is FieldStateError.Error -> stringResource(uiState.password.error.message)
-                },
-                title = stringResource(R.string.password_field),
-                placeholder = stringResource(R.string.provide_password)
-            )
-            Spacer(modifier = Modifier.size(4.dp))
-
-            CPOutlinedTextField(
-                value = uiState.reEnteredPassword.value,
-                onValueChange = { onAction(SignUpAction.UpdateReEnteredPasswordInput(it)) },
-                isError = uiState.reEnteredPassword.error is FieldStateError.Error,
-                errorText = when(uiState.reEnteredPassword.error) {
-                    is FieldStateError.None -> null
-                    is FieldStateError.Error -> stringResource(uiState.reEnteredPassword.error.message)
-                },
-                title = stringResource(R.string.confirm_password_field),
-                placeholder = stringResource(R.string.provide_confirm_password)
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(55.dp)
-                    .padding(horizontal = 16.dp),
-                onClick = { onAction(SignUpAction.Register) }
-            ) {
-                Text(text = stringResource(R.string.register), fontSize = 20.sp)
-            }
+            Text(text = stringResource(R.string.register), fontSize = 20.sp)
         }
     }
 }

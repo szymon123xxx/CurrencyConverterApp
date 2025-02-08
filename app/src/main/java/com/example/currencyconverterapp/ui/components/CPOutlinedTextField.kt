@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +31,7 @@ fun CPOutlinedTextField(
     errorText: String?,
     title: String,
     placeholder: String,
-    trailingIcon: @Composable (() -> Unit)? = null
+    isPasswordType: Boolean = false
 ) {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
@@ -49,13 +51,13 @@ fun CPOutlinedTextField(
             onValueChange = onValueChange,
             isError = isError,
             placeholder = {
-                    Text(
-                        modifier = Modifier.wrapContentSize(),
-                        text = placeholder,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.outlineVariant,
-                        fontSize = 16.sp
-                    )
+                Text(
+                    modifier = Modifier.wrapContentSize(),
+                    text = placeholder,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    fontSize = 16.sp
+                )
             },
             supportingText = {
                 errorText?.let {
@@ -67,7 +69,7 @@ fun CPOutlinedTextField(
                 }
 
             },
-            trailingIcon = trailingIcon,
+            visualTransformation = if (isPasswordType) PasswordVisualTransformation() else VisualTransformation.None
         )
     }
 }
@@ -75,9 +77,11 @@ fun CPOutlinedTextField(
 @Preview
 @Composable
 fun CPOutlinedTextFieldPreview() =
-    Box(modifier = Modifier
-        .background(Color.White)
-        .wrapContentSize()) {
+    Box(
+        modifier = Modifier
+            .background(Color.White)
+            .wrapContentSize()
+    ) {
         CPOutlinedTextField(
             value = "",
             onValueChange = {},
