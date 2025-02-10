@@ -1,7 +1,7 @@
 package com.example.currencyconverterapp.core.di
 
-import com.example.currencyconverterapp.data.usecasesimpl.DispatcherProviderImpl
-import com.example.currencyconverterapp.domain.usecases.DispatcherProvider
+import com.example.currencyconverterapp.core.provider.DispatcherProviderImpl
+import com.example.currencyconverterapp.core.provider.DispatcherProvider
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

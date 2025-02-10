@@ -2,8 +2,8 @@ package com.example.currencyconverterapp.data.usecasesimpl
 
 import android.util.Log
 import com.example.currencyconverterapp.BuildConfig
+import com.example.currencyconverterapp.core.provider.DispatcherProvider
 import com.example.currencyconverterapp.data.network.ExchangeRateApi
-import com.example.currencyconverterapp.domain.usecases.DispatcherProvider
 import com.example.currencyconverterapp.domain.usecases.GetSupportedCurrenciesUseCase
 import com.example.currencyconverterapp.domain.usecases.SupportedCurrenciesResult
 import kotlinx.coroutines.withContext

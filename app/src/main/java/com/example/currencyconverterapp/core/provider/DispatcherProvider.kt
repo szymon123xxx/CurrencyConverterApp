@@ -1,4 +1,4 @@
-package com.example.currencyconverterapp.domain.usecases
+package com.example.currencyconverterapp.core.provider
 
 import kotlinx.coroutines.CoroutineDispatcher
 
