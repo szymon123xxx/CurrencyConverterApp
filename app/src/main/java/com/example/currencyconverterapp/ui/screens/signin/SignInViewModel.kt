@@ -50,6 +50,7 @@ sealed interface SignInAction {
     data class UpdateEmailInput(val email: String) : SignInAction
     data class UpdatePasswordInput(val password: String) : SignInAction
     data object Authorize : SignInAction
+    data object CloseScreen: SignInAction
 }
 
 private sealed interface SignInMutation {
@@ -62,7 +63,8 @@ private sealed interface SignInMutation {
 }
 
 sealed interface SignInEffect {
-    data object Success : SignInEffect
+    data object SuccessfulAuthorizationTriggered : SignInEffect
+    data object BackNavigationTriggered : SignInEffect
 }
 
 /**
@@ -98,9 +100,13 @@ private fun CoroutineScope.createSignInController(
                         if (email.value != preferences.getEmail() || password.value != preferences.getPassword())
                             emit(SignInMutation.SetValidationError(R.string.invalid_login_inputs))
                         else
-                            emitEffect(SignInEffect.Success)
+                            emitEffect(SignInEffect.SuccessfulAuthorizationTriggered)
                     }
                 }
+            }
+
+            is SignInAction.CloseScreen -> flow {
+                emitEffect(SignInEffect.BackNavigationTriggered)
             }
         }
     },

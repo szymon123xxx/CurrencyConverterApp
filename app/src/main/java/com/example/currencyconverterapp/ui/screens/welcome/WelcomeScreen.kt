@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.currencyconverterapp.ui.NavRoutes
+import com.example.currencyconverterapp.nav.NavRoutes
 
 @Composable
 fun WelcomeScreen(navController: NavController) {

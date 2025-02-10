@@ -55,6 +55,7 @@ sealed interface SignUpAction {
     data class UpdatePasswordInput(val password: String) : SignUpAction
     data class UpdateReEnteredPasswordInput(val reEnteredPassword: String) : SignUpAction
     data object Register : SignUpAction
+    data object CloseScreen: SignUpAction
 }
 
 private sealed interface SignUpMutation {
@@ -71,7 +72,8 @@ private sealed interface SignUpMutation {
 }
 
 sealed interface SignUpEffect {
-    data object Success : SignUpEffect
+    data object SuccessfulRegistrationTriggered : SignUpEffect
+    data object BackNavigationTriggered : SignUpEffect
 }
 
 /**
@@ -95,6 +97,8 @@ private fun CoroutineScope.createSignUpController(
             )
 
             is SignUpAction.UpdateUsername -> flowOf(SignUpMutation.UpdateUsername(action.username))
+
+            is SignUpAction.CloseScreen -> flow { emitEffect(SignUpEffect.BackNavigationTriggered) }
 
             is SignUpAction.Register -> with(currentState) {
                 when {
@@ -137,7 +141,7 @@ private fun CoroutineScope.createSignUpController(
                             setPassword(password.value)
                             setUsername(username.value)
                         }
-                        emitEffect(SignUpEffect.Success)
+                        emitEffect(SignUpEffect.SuccessfulRegistrationTriggered)
                     }
                 }
             }

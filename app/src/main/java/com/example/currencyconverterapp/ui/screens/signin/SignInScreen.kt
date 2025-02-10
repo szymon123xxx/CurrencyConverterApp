@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.ui.screens.signin
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,58 +21,31 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.ui.NavRoutes
 import com.example.currencyconverterapp.ui.components.CPOutlinedTextField
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-
-@Composable
-fun SignInScreen(
-    navController: NavController,
-    viewModel: SignInViewModel = hiltViewModel(),
-    navigateBack: () -> Unit
-) {
-    val uiState by viewModel.controller.state.collectAsStateWithLifecycle()
-
-    LaunchedEffect(viewModel.controller) {
-        viewModel.controller.effects.onEach {
-            if (it == SignInEffect.Success)
-                navController.navigate(NavRoutes.Home.route)
-        }.launchIn(this)
-    }
-
-    SignInScreenContent(
-        uiState = uiState,
-        navigateBack = navigateBack,
-        onAction = viewModel.controller::dispatch
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SignInScreenContent(
+fun SignInScreen(
+    modifier: Modifier,
     uiState: SignInState,
     onAction: (SignInAction) -> Unit,
-    navigateBack: () -> Unit,
 ) {
+    BackHandler { onAction(SignInAction.CloseScreen) }
+
+    //scaffold could be extracted outisae and there would be only on aligned top app bar, thing about it later
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = navigateBack) {
+                    IconButton(onClick = { onAction(SignInAction.CloseScreen) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null
@@ -82,7 +56,7 @@ private fun SignInScreenContent(
         },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background),
@@ -130,8 +104,8 @@ private fun SignInScreenContent(
 
 @Preview
 @Composable
-fun SignInScreenPreview() = SignInScreenContent(
+fun SignInScreenPreview() = SignInScreen(
+    modifier = Modifier,
     uiState = SignInState(),
     onAction = {},
-    navigateBack = {}
 )
