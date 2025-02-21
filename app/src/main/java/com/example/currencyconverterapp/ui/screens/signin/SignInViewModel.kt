@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
+typealias SignInController = EffectController<SignInAction, SignInState, SignInEffect>
+
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     preferences: DataStorePreferencesUseCase
@@ -47,8 +49,8 @@ sealed interface SignInAuthState {
 }
 
 sealed interface SignInAction {
-    data class UpdateEmailInput(val email: String) : SignInAction
-    data class UpdatePasswordInput(val password: String) : SignInAction
+    data class SetEmailInput(val email: String) : SignInAction
+    data class SetPasswordInput(val password: String) : SignInAction
     data object Authorize : SignInAction
     data object CloseScreen: SignInAction
 }
@@ -67,19 +69,16 @@ sealed interface SignInEffect {
     data object BackNavigationTriggered : SignInEffect
 }
 
-/**
- * When making project modularized, switch to internal with all fun/classes
- */
 private fun CoroutineScope.createSignInController(
     initialSignInState: SignInState,
     preferences: DataStorePreferencesUseCase,
-): EffectController<SignInAction, SignInState, SignInEffect> = createEffectController(
+): SignInController = createEffectController(
     initialState = initialSignInState,
     mutator = { action ->
         when (action) {
-            is SignInAction.UpdateEmailInput -> flowOf(SignInMutation.UpdateEmail(action.email))
+            is SignInAction.SetEmailInput -> flowOf(SignInMutation.UpdateEmail(action.email))
 
-            is SignInAction.UpdatePasswordInput -> flowOf(SignInMutation.UpdatePassword(action.password))
+            is SignInAction.SetPasswordInput -> flowOf(SignInMutation.UpdatePassword(action.password))
 
             is SignInAction.Authorize -> with(currentState) {
                 when {
@@ -154,4 +153,3 @@ private fun CoroutineScope.createSignInController(
         }
     }
 )
-

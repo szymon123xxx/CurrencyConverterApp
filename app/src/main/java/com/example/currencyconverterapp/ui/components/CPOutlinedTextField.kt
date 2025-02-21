@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,16 +33,17 @@ fun CPOutlinedTextField(
     title: String,
     placeholder: String,
     isPasswordType: Boolean = false
-) {
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+) = Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
-            modifier = Modifier.wrapContentSize(),
             text = title,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontSize = 20.sp
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 20.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         Spacer(Modifier.size(8.dp))
+
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,7 +58,7 @@ fun CPOutlinedTextField(
                     text = placeholder,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.outlineVariant,
-                    fontSize = 16.sp
+                    fontSize = 20.sp
                 )
             },
             supportingText = {
@@ -64,15 +66,15 @@ fun CPOutlinedTextField(
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = it,
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.onError
                     )
                 }
 
             },
+            singleLine = true,
             visualTransformation = if (isPasswordType) PasswordVisualTransformation() else VisualTransformation.None
         )
     }
-}
 
 @Preview
 @Composable

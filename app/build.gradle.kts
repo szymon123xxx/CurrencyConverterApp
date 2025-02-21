@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.compose.lifecycle)
     implementation(libs.squareup.retrofit)
     implementation(libs.squareup.gson.converter)
+    implementation(libs.airbnb.lottie)
     ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)

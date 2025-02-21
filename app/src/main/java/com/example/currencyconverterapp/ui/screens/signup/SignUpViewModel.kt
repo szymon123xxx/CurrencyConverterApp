@@ -15,10 +15,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
+typealias SignUpController = EffectController<SignUpAction, SignUpState, SignUpEffect>
+
 @HiltViewModel
-class SignUpViewModel @Inject constructor(
-    preferences: DataStorePreferencesUseCase,
-) : ViewModel() {
+class SignUpViewModel @Inject constructor(preferences: DataStorePreferencesUseCase) : ViewModel() {
     val controller = viewModelScope.createSignUpController(
         initialSignUpState = SignUpState(),
         preferences = preferences,
@@ -55,7 +55,7 @@ sealed interface SignUpAction {
     data class UpdatePasswordInput(val password: String) : SignUpAction
     data class UpdateReEnteredPasswordInput(val reEnteredPassword: String) : SignUpAction
     data object Register : SignUpAction
-    data object CloseScreen: SignUpAction
+    data object CloseScreen : SignUpAction
 }
 
 private sealed interface SignUpMutation {
@@ -76,13 +76,10 @@ sealed interface SignUpEffect {
     data object BackNavigationTriggered : SignUpEffect
 }
 
-/**
- * When making project modularized, switch to internal with all fun/classes
- */
 private fun CoroutineScope.createSignUpController(
     initialSignUpState: SignUpState,
     preferences: DataStorePreferencesUseCase,
-): EffectController<SignUpAction, SignUpState, SignUpEffect> = createEffectController(
+): SignUpController = createEffectController(
     initialState = initialSignUpState,
     mutator = { action ->
         when (action) {

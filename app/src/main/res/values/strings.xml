@@ -20,4 +20,7 @@
     <string name="provide_confirm_password">Enter confirm password</string>
     <string name="button_login">Login</string>
     <string name="invalid_login_inputs">The entered password or email is invalid</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="convert">Convert</string>
 </resources>
