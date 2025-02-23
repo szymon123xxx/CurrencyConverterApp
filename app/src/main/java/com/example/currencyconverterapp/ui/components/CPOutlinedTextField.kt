@@ -67,7 +67,7 @@ fun CPOutlinedTextField(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = it,
-                    color = MaterialTheme.colorScheme.onError
+                    color = MaterialTheme.colorScheme.error
                 )
             }
         },

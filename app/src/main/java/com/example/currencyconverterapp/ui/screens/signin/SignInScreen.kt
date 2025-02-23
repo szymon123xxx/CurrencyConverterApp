@@ -65,7 +65,7 @@ fun SignInScreen(
             CPOutlinedTextField(
                 value = uiState.email.value,
                 onValueChange = { onAction(SignInAction.SetEmailInput(it)) },
-                isError = uiState.email.error is FieldStateError.Error,
+                isError = uiState.authState is SignInAuthState.Error,
                 errorText = when (uiState.email.error) {
                     is FieldStateError.None -> null
                     is FieldStateError.Error -> stringResource(uiState.email.error.message)
@@ -77,7 +77,7 @@ fun SignInScreen(
             CPOutlinedTextField(
                 value = uiState.password.value,
                 onValueChange = { onAction(SignInAction.SetPasswordInput(it)) },
-                isError = uiState.password.error is FieldStateError.Error,
+                isError = uiState.authState is SignInAuthState.Error,
                 errorText = when (uiState.password.error) {
                     is FieldStateError.None -> null
                     is FieldStateError.Error -> stringResource(uiState.password.error.message)

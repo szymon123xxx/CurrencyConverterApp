@@ -95,7 +95,8 @@ fun SignUpScreen(
                     is FieldStateError.Error -> stringResource(uiState.password.error.message)
                 },
                 title = stringResource(R.string.password_field),
-                placeholder = stringResource(R.string.provide_password)
+                placeholder = stringResource(R.string.provide_password),
+                isPasswordType = true,
             )
             Spacer(modifier = Modifier.size(4.dp))
 
@@ -108,7 +109,8 @@ fun SignUpScreen(
                     is FieldStateError.Error -> stringResource(uiState.reEnteredPassword.error.message)
                 },
                 title = stringResource(R.string.confirm_password_field),
-                placeholder = stringResource(R.string.provide_confirm_password)
+                placeholder = stringResource(R.string.provide_confirm_password),
+                isPasswordType = true,
             )
             Spacer(modifier = Modifier.size(8.dp))
 
