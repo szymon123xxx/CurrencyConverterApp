@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -47,12 +46,11 @@ fun WelcomeScreen(navController: NavController) {
         AnimatedPreloader()
 
         Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
+            modifier = Modifier.fillMaxWidth(),
             onClick = { navController.navigate(NavRoutes.SignIn.route) },
         ) {
             Text(
+                modifier = Modifier.padding(vertical = 10.dp),
                 color = MaterialTheme.colorScheme.onPrimary,
                 text = stringResource(R.string.sign_in),
                 fontSize = 20.sp
@@ -60,15 +58,14 @@ fun WelcomeScreen(navController: NavController) {
         }
         Spacer(modifier = Modifier.size(10.dp))
         Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
+            modifier = Modifier.fillMaxWidth(),
             onClick = { navController.navigate(NavRoutes.SignUp.route) },
         ) {
             Text(
+                modifier = Modifier.padding(vertical = 10.dp),
                 color = MaterialTheme.colorScheme.onPrimary,
                 text = stringResource(R.string.sign_up),
-                fontSize = 20.sp
+                fontSize = 20.sp,
             )
         }
     }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -32,9 +31,9 @@ import com.example.currencyconverterapp.ui.components.CPOutlinedTextField
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    modifier: Modifier,
     uiState: SignUpState,
     onAction: (SignUpAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     BackHandler { onAction(SignUpAction.CloseScreen) }
 
@@ -47,7 +46,7 @@ fun SignUpScreen(
                     IconButton(onClick = { onAction(SignUpAction.CloseScreen) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
+                            contentDescription = Icons.AutoMirrored.Filled.ArrowBack.name
                         )
                     }
                 },
@@ -116,14 +115,15 @@ fun SignUpScreen(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
                     .padding(horizontal = 16.dp),
                 onClick = { onAction(SignUpAction.Register) }
             ) {
                 Text(
+                    modifier = Modifier.padding(vertical = 10.dp),
                     color = MaterialTheme.colorScheme.onPrimary,
                     text = stringResource(R.string.register),
-                    fontSize = 20.sp)
+                    fontSize = 20.sp,
+                )
             }
         }
     }

@@ -29,52 +29,52 @@ fun CPOutlinedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     isError: Boolean,
-    errorText: String?,
     title: String,
     placeholder: String,
+    errorText: String?,
+    modifier: Modifier = Modifier,
     isPasswordType: Boolean = false
-) = Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        Text(
-            text = title,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 20.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Spacer(Modifier.size(8.dp))
+) = Column(modifier = modifier.padding(horizontal = 16.dp)) {
+    Text(
+        text = title,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        fontSize = 20.sp,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+    Spacer(Modifier.size(8.dp))
 
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            shape = RoundedCornerShape(100),
-            value = value,
-            onValueChange = onValueChange,
-            isError = isError,
-            placeholder = {
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        shape = RoundedCornerShape(100),
+        value = value,
+        onValueChange = onValueChange,
+        isError = isError,
+        placeholder = {
+            Text(
+                modifier = Modifier.wrapContentSize(),
+                text = placeholder,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.outlineVariant,
+                fontSize = 20.sp
+            )
+        },
+        supportingText = {
+            errorText?.let {
                 Text(
-                    modifier = Modifier.wrapContentSize(),
-                    text = placeholder,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.outlineVariant,
-                    fontSize = 20.sp
+                    modifier = Modifier.fillMaxWidth(),
+                    text = it,
+                    color = MaterialTheme.colorScheme.onError
                 )
-            },
-            supportingText = {
-                errorText?.let {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = it,
-                        color = MaterialTheme.colorScheme.onError
-                    )
-                }
-
-            },
-            singleLine = true,
-            visualTransformation = if (isPasswordType) PasswordVisualTransformation() else VisualTransformation.None
-        )
-    }
+            }
+        },
+        singleLine = true,
+        visualTransformation = if (isPasswordType) PasswordVisualTransformation() else VisualTransformation.None
+    )
+}
 
 @Preview
 @Composable

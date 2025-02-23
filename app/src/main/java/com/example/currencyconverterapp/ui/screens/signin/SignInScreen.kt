@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -33,14 +32,14 @@ import com.example.currencyconverterapp.ui.components.CPOutlinedTextField
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    modifier: Modifier,
     uiState: SignInState,
     onAction: (SignInAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     BackHandler { onAction(SignInAction.CloseScreen) }
 
-    //scaffold could be extracted outisae and there would be only on aligned top app bar, thing about it later
     Scaffold(
+        modifier = modifier,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {},
@@ -48,7 +47,7 @@ fun SignInScreen(
                     IconButton(onClick = { onAction(SignInAction.CloseScreen) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
+                            contentDescription = Icons.AutoMirrored.Filled.ArrowBack.name
                         )
                     }
                 },
@@ -56,7 +55,7 @@ fun SignInScreen(
         },
     ) { innerPadding ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background),
@@ -92,11 +91,14 @@ fun SignInScreen(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(55.dp)
                     .padding(horizontal = 16.dp),
                 onClick = { onAction(SignInAction.Authorize) }
             ) {
-                Text(text = stringResource(R.string.button_login), fontSize = 20.sp)
+                Text(
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    text = stringResource(R.string.button_login),
+                    fontSize = 20.sp
+                )
             }
         }
     }

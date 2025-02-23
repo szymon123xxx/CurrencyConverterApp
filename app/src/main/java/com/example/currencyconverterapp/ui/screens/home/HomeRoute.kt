@@ -3,7 +3,6 @@ package com.example.currencyconverterapp.ui.screens.home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.launchIn
@@ -23,15 +22,12 @@ fun HomeRouteContent(
     LaunchedEffect(viewModel.controller) {
         viewModel.controller.effects.onEach { effect ->
             when (effect) {
-                is HomeEffect.Logout -> {
-                    navigateBack()
-                }
+                is HomeEffect.Logout -> navigateBack()
             }
         }.launchIn(this)
     }
 
     HomeScreen(
-        modifier = Modifier,
         uiState = uiState,
         onAction = viewModel.controller::dispatch,
     )

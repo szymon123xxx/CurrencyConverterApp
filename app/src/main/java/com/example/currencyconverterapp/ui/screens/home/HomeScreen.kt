@@ -51,9 +51,9 @@ import com.example.currencyconverterapp.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    modifier: Modifier,
     uiState: HomeState,
-    onAction: (HomeAction) -> Unit
+    onAction: (HomeAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     BackHandler { onAction(HomeAction.CloseScreen) }
 
@@ -69,7 +69,7 @@ fun HomeScreen(
                             onClick = { onAction(HomeAction.CloseScreen) }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                                contentDescription = null,
+                                contentDescription = Icons.AutoMirrored.Filled.ExitToApp.name,
                             )
                         }
                     }
